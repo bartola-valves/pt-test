@@ -35,7 +35,9 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(pt-test pt-test-working.cpp )
+add_executable(pt-test
+    pt-test-eurorack.cpp
+)
 
 pico_set_program_name(pt-test "pt-test")
 pico_set_program_version(pt-test "0.1")
@@ -50,7 +52,10 @@ target_link_libraries(pt-test
         hardware_gpio
         hardware_adc
         hardware_pwm
-        hardware_timer)
+        hardware_timer
+        hardware_irq
+        hardware_clocks
+        hardware_sync)
 
 # Add the standard include files to the build
 target_include_directories(pt-test PRIVATE

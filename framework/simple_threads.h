@@ -19,16 +19,18 @@ private:
     absolute_time_t last_time;
     uint32_t interval_ms;
     bool enabled;
+    const char *name;
 
 public:
     /**
      * @brief Constructor
      */
-    SimpleThread()
+    SimpleThread(const char *thread_name = "SimpleThread")
     {
         last_time = get_absolute_time();
         interval_ms = 0;
         enabled = true;
+        name = thread_name;
     }
 
     /**
@@ -87,6 +89,15 @@ public:
     bool isEnabled() const
     {
         return enabled;
+    }
+
+    /**
+     * @brief Get thread name
+     * @return Thread name
+     */
+    const char *getName() const
+    {
+        return name;
     }
 
     /**
@@ -162,6 +173,15 @@ public:
         {
             threads[i] = nullptr;
         }
+    }
+
+    /**
+     * @brief Get the current number of threads
+     * @return Current thread count
+     */
+    int getThreadCount() const
+    {
+        return thread_count;
     }
 };
 

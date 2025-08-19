@@ -106,6 +106,46 @@ namespace EurorackUtils
             float voltage = readVoltage(adc_channel);
             return (voltage - 1.65f) * (10.0f / 3.3f); // Scale and center
         }
+
+        /**
+         * @brief Convert ADC reading to Eurorack voltage
+         * @param adc_value 12-bit ADC value (0-4095)
+         * @return Voltage in range -5V to +5V
+         */
+        inline float adcToEurorackVoltage(uint16_t adc_value)
+        {
+            // ADC gives 0-4095 for 0-3.3V input
+            // Scale to -5V to +5V range
+            float voltage = (adc_value / 4095.0f) * 3.3f; // 0-3.3V
+            return (voltage - 1.65f) * (10.0f / 3.3f);    // Scale to -5V to +5V
+        }
+
+        /**
+         * @brief Convert Eurorack voltage to DAC value
+         * @param voltage Voltage in range -5V to +5V
+         * @return 16-bit DAC value (0-65535)
+         */
+        inline uint16_t eurorackVoltageToDAC(float voltage)
+        {
+            // Clamp voltage to valid range
+            if (voltage < -5.0f)
+                voltage = -5.0f;
+            if (voltage > 5.0f)
+                voltage = 5.0f;
+
+            // Scale from -5V to +5V to 0-65535
+            return (uint16_t)((voltage + 5.0f) / 10.0f * 65535.0f);
+        }
+
+        /**
+         * @brief Convert DAC value to Eurorack voltage
+         * @param dac_value 16-bit DAC value (0-65535)
+         * @return Voltage in range -5V to +5V
+         */
+        inline float dacToEurorackVoltage(uint16_t dac_value)
+        {
+            return (dac_value / 65535.0f) * 10.0f - 5.0f;
+        }
     }
 
     /**
@@ -233,6 +273,19 @@ namespace EurorackUtils
          * @return Constrained value
          */
         inline float constrain(float value, float min_val, float max_val)
+        {
+            if (value < min_val)
+                return min_val;
+            if (value > max_val)
+                return max_val;
+            return value;
+        }
+
+        /**
+         * @brief Clamp a value to a range (alias for constrain)
+         */
+        template <typename T>
+        inline T clamp(T value, T min_val, T max_val)
         {
             if (value < min_val)
                 return min_val;
