@@ -36,7 +36,7 @@ pico_sdk_init()
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(pt-test
-    pt-test-working.cpp
+    pt-test-simple.cpp
 )
 
 pico_set_program_name(pt-test "pt-test")
